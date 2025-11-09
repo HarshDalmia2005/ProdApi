@@ -6,6 +6,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import authRoutes from "./routes/auth.routes.js";
 import { timestamp } from "drizzle-orm/gel-core";
+import securityMiddleware from "./middleware/security.middleware.js";
 
 const app = express();
 
@@ -13,12 +14,15 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+
 app.use(
   morgan("combined", {
     stream: { write: (message) => logger.info(message.trim()) },
   })
 );
-app.use(cookieParser());
+
+app.use(securityMiddleware);
 
 app.get("/", (req, res) => {
   logger.info("Hello from harsh");

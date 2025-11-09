@@ -15,8 +15,6 @@ export const signup = async (req, res, next) => {
       });
     }
 
-    const { name, email } = validationRes.data;
-
     const user = await createUser(validationRes.data);
     const token = jwttoken.sign({
       id: user.id,
@@ -25,7 +23,7 @@ export const signup = async (req, res, next) => {
     });
     cookies.set(res, "token", token);
 
-    logger.info(`User Registered Successfully:${email}`);
+    logger.info(`User Registered Successfully:${user.email}`);
     res.status(201).json({
       message: "User registered successfully",
       user: {
